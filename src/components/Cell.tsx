@@ -24,6 +24,7 @@ const Cell = ({
   const isWrongInput =
     wrongInputPosition?.row === row && wrongInputPosition?.col === col;
   const hasWrongInput = !!wrongInputPosition;
+  
 
   useEffect(() => {
     if (
