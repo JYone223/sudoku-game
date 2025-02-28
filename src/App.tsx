@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sudoku from './utils/Sudoku';
 import clsx from 'clsx';
 import { triggerCelebration } from './utils/celebrationAnimation';
@@ -24,7 +24,7 @@ export default function App() {
     }
 
     if (value !== solution[row][col]) {
-      Toast.show('❌输入错误，请重新输入', 'error');
+      Toast.show('输入错误，请撤回后重新输入', 'error');
       setWrongInputPosition({ row, col });
     } else {
       setWrongInputPosition(null);
@@ -58,7 +58,7 @@ export default function App() {
         }
       }
     }
-    
+    Toast.show('🎉恭喜，你成功完成了 Sudoku 游戏！', 'success');
     triggerCelebration();
   };
 
@@ -69,10 +69,6 @@ export default function App() {
 
   useEffect(() => {
     checkSolution();
-
-    console.log('checksolution')
-
-    // Toast.show('🎉恭喜，你成功完成了 Sudoku 游戏！', 'success');
   }, [grid]);
 
   return (

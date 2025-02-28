@@ -15,6 +15,7 @@ interface ToastItem {
 
 let toastContainer: HTMLDivElement | null = null;
 const listeners = new Set<() => void>();
+let reactRoot: any = null;
 const toasts = new Map<string, ToastItem>();
 
 function createContainer() {
@@ -23,28 +24,31 @@ function createContainer() {
     toastContainer.id = '__toast_container__';
     document.body.appendChild(toastContainer);
   }
-
   return toastContainer;
 }
 
+function ensureInitialized() {
+  if (!reactRoot) {
+    createContainer();
+    reactRoot = createRoot(toastContainer!);
+    reactRoot.render(<ToastRenderer />);
+  }
+}
+
 function notify() {
-  console.log('notify: ', listeners)
   listeners.forEach((listener) => listener());
 }
 
 const Toast = {
   show: (message: string, type: ToastType = 'info', duration = 3000) => {
+    ensureInitialized();
     const id = Math.random().toString(36).slice(2);
-
     toasts.set(id, {
       id,
       message,
       type,
       duration,
     });
-
-    createContainer();
-
     notify();
 
     if (duration > 0) {
@@ -61,8 +65,8 @@ const ToastItem = ({ item }: { item: ToastItem }) => {
   const typeConfig = {
     success: { color: 'bg-green-400', icon: <FiCheckCircle /> },
     error: { color: 'bg-red-400', icon: <FiAlertTriangle /> },
-    warning: { color: 'bg-yellow-500', icon: <FiAlertTriangle /> },
-    info: { color: 'bg-blue-500', icon: <FiInfo /> },
+    warning: { color: 'bg-yellow-400', icon: <FiAlertTriangle /> },
+    info: { color: 'bg-blue-400', icon: <FiInfo /> },
   }[item.type];
 
   return (
@@ -95,17 +99,18 @@ const ToastRenderer = () => {
   useEffect(() => {
     const update = () => {
       setItems(Array.from(toasts.values()));
-
       if (toasts.size === 0 && toastContainer) {
         setTimeout(() => {
           if (toasts.size === 0 && toastContainer) {
             document.body.removeChild(toastContainer);
             toastContainer = null;
+            reactRoot = null;
           }
         }, 1000);
       }
     };
-
+    // 立即执行首次更新
+    update();
     listeners.add(update);
     return () => {
       listeners.delete(update);
@@ -115,7 +120,7 @@ const ToastRenderer = () => {
   if (!toastContainer) return null;
 
   return createPortal(
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-screen-sm z-50">
+    <div className="flex justify-center fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-screen-sm z-50">
       <AnimatePresence>
         {items.map((item) => (
           <ToastItem key={item.id} item={item} />
@@ -125,23 +130,5 @@ const ToastRenderer = () => {
     toastContainer
   );
 };
-
-if (typeof document !== 'undefined') {
-  const render = () => {
-    if (toastContainer && !(toastContainer as any)._rendered) {
-      (toastContainer as any)._rendered = true;
-      createRoot(toastContainer).render(<ToastRenderer />);
-    }
-  };
-
-  Toast.show = new Proxy(Toast.show, {
-    apply(target, thisArg, args) {
-
-      console.log('Toast.show: ', toastContainer)
-      render();
-      return target.apply(thisArg, args as any);
-    },
-  });
-}
 
 export default Toast;
