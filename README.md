@@ -16,7 +16,7 @@
 
 ## 🪴 项目信息
 
-- 😝 项目预览：https://sudoku-game-gamma.vercel.app
+- 😝 项目预览：https://sudoku-game-gamma.vercel.app (需梯子🪜)
 - 🎯 技术栈：[React](https://react.dev/)、[Vite](https://vitejs.dev/)、[Tailwindcss](https://www.tailwindcss.cn/)、
 
 ## ✨ 核心功能
