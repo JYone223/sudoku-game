@@ -3,7 +3,7 @@ import Sudoku from './utils/Sudoku';
 import clsx from 'clsx';
 import { triggerCelebration } from './utils/celebrationAnimation';
 import Cell from './components/Cell';
-// import Toast from './components/Toast';
+import Toast from './components/Toast';
 
 const sudoku = new Sudoku();
 
@@ -24,10 +24,7 @@ export default function App() {
     }
 
     if (value !== solution[row][col]) {
-      // Toast.show('输入错误，请撤回后重新输入', 'error');
-      import('./components/Toast').then((module: any) => {
-        module.default.show('123', 'error')
-      })
+      Toast.show('输入错误，请撤回后重新输入', 'error');
       setWrongInputPosition({ row, col });
     } else {
       setWrongInputPosition(null);
@@ -61,10 +58,7 @@ export default function App() {
         }
       }
     }
-    // Toast.show('🎉恭喜，你成功完成了 Sudoku 游戏！', 'success');
-    import('./components/Toast').then((module: any) => {
-      module.default.show('123', 'success')
-    })
+    Toast.show('🎉恭喜，你成功完成了 Sudoku 游戏！', 'success');
     triggerCelebration();
     setCurrentCell(null);
     setHistory([]);
