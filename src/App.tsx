@@ -60,6 +60,8 @@ export default function App() {
     }
     Toast.show('🎉恭喜，你成功完成了 Sudoku 游戏！', 'success');
     triggerCelebration();
+    setCurrentCell(null);
+    setHistory([]);
   };
 
   const resetGame = () => {
