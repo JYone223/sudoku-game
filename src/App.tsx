@@ -65,6 +65,9 @@ export default function App() {
   const resetGame = () => {
     setGrid(sudoku.generatePuzzle(30));
     setSolution(sudoku.generateFullSudoku());
+    setCurrentCell(null);
+    setWrongInputPosition(null);
+    setHistory([]);
   };
 
   useEffect(() => {
