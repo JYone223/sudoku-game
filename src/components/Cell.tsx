@@ -1,5 +1,6 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
+import { motion } from 'motion/react';
 
 const Cell = ({
   row,
@@ -24,6 +25,7 @@ const Cell = ({
   const isWrongInput =
     wrongInputPosition?.row === row && wrongInputPosition?.col === col;
   const hasWrongInput = !!wrongInputPosition;
+  const [isHover, setIsHover] = useState(false);
 
   useEffect(() => {
     if (
@@ -33,10 +35,15 @@ const Cell = ({
     ) {
       inputRef.current.focus();
     }
+
+    if (!currentCell) {
+      setIsHover(false);
+    }
   }, [currentCell, row, col]);
 
   return (
-    <div
+    <motion.div
+      id={`cell-${row}-${col}`}
       className={clsx(
         'w-12 h-12 flex justify-center items-center text-xl font-bold border border-gray-300',
         {
@@ -51,11 +58,13 @@ const Cell = ({
             !hasWrongInput &&
             (currentCell?.row === row || currentCell?.col === col),
           'bg-sky-300!':
-            currentCell?.isInput === false &&
             !hasWrongInput &&
-            currentCell?.value === value,
+            ((currentCell?.isInput === false && currentCell?.value === value) ||
+              isHover),
         }
       )}
+      onHoverStart={() => setIsHover(true)}
+      onHoverEnd={() => setIsHover(false)}
       onClick={() =>
         value &&
         setCurrentCell((prev) => ({
@@ -102,7 +111,7 @@ const Cell = ({
           })}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 
