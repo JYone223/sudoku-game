@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { motion } from 'motion/react';
 
 const Cell = ({
   row,
@@ -42,7 +41,7 @@ const Cell = ({
   }, [currentCell, row, col]);
 
   return (
-    <motion.div
+    <div
       id={`cell-${row}-${col}`}
       className={clsx(
         'w-12 h-12 flex justify-center items-center text-xl font-bold border border-gray-300',
@@ -63,8 +62,8 @@ const Cell = ({
               isHover),
         }
       )}
-      onHoverStart={() => setIsHover(true)}
-      onHoverEnd={() => setIsHover(false)}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
       onClick={() =>
         value &&
         setCurrentCell((prev) => ({
@@ -111,7 +110,7 @@ const Cell = ({
           })}
         />
       )}
-    </motion.div>
+    </div>
   );
 };
 
