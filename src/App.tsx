@@ -13,7 +13,7 @@ import { ICell, ICurrentCell, ITimerRefHandles } from './type';
 const sudoku = new Sudoku();
 
 export default function App() {
-  const [grid, setGrid] = useState<number[][]>(sudoku.generatePuzzle(80));
+  const [grid, setGrid] = useState<number[][]>(sudoku.generatePuzzle(30));
   const [solution, setSolution] = useState<number[][]>(
     sudoku.generateFullSudoku()
   );
@@ -37,7 +37,7 @@ export default function App() {
       if (wrongTimes >= 2) {
         Toast.show('很遗憾，错误次数超出限制 🙅，请重新开始游戏', 'error', 10000);
         timerRef.current?.toggleTimeRunning();
-        // 弹窗提示错误次数达到上限，提供 重新开始新的游戏 或 从头开始本盘游戏
+        // todo: 弹窗提示错误次数达到上限，提供 重新开始新的游戏 或 从头开始本盘游戏
       } else {
         Toast.show('输入错误，请撤回后重新输入', 'error');
       }
