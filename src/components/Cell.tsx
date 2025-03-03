@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
+import { ICell, ICurrentCell } from '../type';
 
 const Cell = ({
   row,
