@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti';
 
 export const triggerCelebration = () => {
   const colors = ['#ec4899', '#8b5cf6', '#6366f1', '#06b6d4', '#10b981'];
-  
+
   // 从底部发射
   confetti({
     particleCount: 80,
@@ -13,7 +13,7 @@ export const triggerCelebration = () => {
     startVelocity: 45,
     gravity: 1.2,
     drift: 0,
-    ticks: 300
+    ticks: 300,
   });
 
   // 从左侧发射
@@ -24,7 +24,7 @@ export const triggerCelebration = () => {
       spread: 55,
       origin: { x: 0, y: 0.5 },
       colors: colors,
-      startVelocity: 35
+      startVelocity: 35,
     });
   }, 250);
 
@@ -36,7 +36,7 @@ export const triggerCelebration = () => {
       spread: 55,
       origin: { x: 1, y: 0.5 },
       colors: colors,
-      startVelocity: 35
+      startVelocity: 35,
     });
   }, 400);
 
@@ -53,7 +53,7 @@ export const triggerCelebration = () => {
       origin: { x: 0.5, y: 0.5 },
       colors: colors,
       shapes: ['square', 'circle'],
-      scalar: 1.2
+      scalar: 1.2,
     });
   }, 600);
 
@@ -67,19 +67,34 @@ export const triggerCelebration = () => {
         angle: 60,
         spread: 55,
         origin: { x: 0 },
-        colors: colors
+        colors: colors,
       });
       confetti({
         particleCount: 4,
         angle: 120,
         spread: 55,
         origin: { x: 1 },
-        colors: colors
+        colors: colors,
       });
 
       if (Date.now() < end) {
         requestAnimationFrame(frame);
       }
-    }());
+    })();
   }, 800);
+};
+
+export const triggerFireworks = () => {
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+  const count = 100;
+
+  function randomInRange(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+  }
+
+  confetti({
+    ...defaults,
+    particleCount: Math.floor(count * Math.random() + 100),
+    origin: { x: randomInRange(0.1, 0.9), y: randomInRange(0.1, 0.9) },
+  });
 };

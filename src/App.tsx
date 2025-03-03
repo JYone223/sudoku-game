@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import Sudoku from './utils/Sudoku';
 import clsx from 'clsx';
-import { triggerCelebration } from './utils/celebrationAnimation';
+import {
+  triggerCelebration,
+  triggerFireworks,
+} from './utils/celebrationAnimation';
 import Cell from './components/Cell';
 import Toast from './components/Toast';
 
 const sudoku = new Sudoku();
 
 export default function App() {
-  const [grid, setGrid] = useState<number[][]>(sudoku.generatePuzzle(30));
+  const [grid, setGrid] = useState<number[][]>(sudoku.generatePuzzle(80));
   const [solution, setSolution] = useState<number[][]>(
     sudoku.generateFullSudoku()
   );
@@ -58,7 +61,7 @@ export default function App() {
         }
       }
     }
-    Toast.show('🎉恭喜，你成功完成了 Sudoku 游戏！', 'success');
+    Toast.show('🎉 恭喜，你成功完成了 Sudoku 游戏！', 'success');
     triggerCelebration();
     setCurrentCell(null);
     setHistory([]);
@@ -114,6 +117,12 @@ export default function App() {
           className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition"
         >
           重新开始
+        </button>
+        <button
+          onClick={triggerFireworks}
+          className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+        >
+          放松一下 🎆
         </button>
       </div>
     </div>
