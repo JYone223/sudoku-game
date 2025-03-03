@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FiX, FiInfo, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
 import { IToastItem } from './type';
-import { toastGlobal } from './utils';
+import { toastGlobal } from './util';
 
 const ToastItem = ({ item }: { item: IToastItem }) => {
   // 配置不同状态的颜色和图标
