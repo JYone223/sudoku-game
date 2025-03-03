@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Sudoku from './utils/Sudoku';
 import clsx from 'clsx';
 import {
@@ -7,6 +7,8 @@ import {
 } from './utils/celebrationAnimation';
 import Cell from './components/Cell';
 import Toast from './components/Toast';
+import Timer from './components/Timer';
+import { ICell, ICurrentCell, ITimerRefHandles } from './type';
 
 const sudoku = new Sudoku();
 
@@ -19,6 +21,9 @@ export default function App() {
   const canUndo = history.length > 0;
   const [currentCell, setCurrentCell] = useState<ICurrentCell | null>();
   const [wrongInputPosition, setWrongInputPosition] = useState<ICell | null>();
+  const [wrongTimes, setWrongTimes] = useState<number>(0);
+  const isWrongLimited = wrongTimes > 2;
+  const timerRef = useRef<ITimerRefHandles>(null);
 
   const updateCell = (row: number, col: number, value: number) => {
     if (isNaN(value) || value < 1 || value > 9) {
@@ -27,8 +32,16 @@ export default function App() {
     }
 
     if (value !== solution[row][col]) {
-      Toast.show('输入错误，请撤回后重新输入', 'error');
       setWrongInputPosition({ row, col });
+
+      if (wrongTimes >= 2) {
+        Toast.show('很遗憾，错误次数超出限制 🙅，请重新开始游戏', 'error', 10000);
+        timerRef.current?.toggleTimeRunning();
+        // 弹窗提示错误次数达到上限，提供 重新开始新的游戏 或 从头开始本盘游戏
+      } else {
+        Toast.show('输入错误，请撤回后重新输入', 'error');
+      }
+      setWrongTimes((prev) => prev + 1);
     } else {
       setWrongInputPosition(null);
     }
@@ -65,6 +78,7 @@ export default function App() {
     triggerCelebration();
     setCurrentCell(null);
     setHistory([]);
+    timerRef.current?.toggleTimeRunning();
   };
 
   const resetGame = () => {
@@ -73,6 +87,7 @@ export default function App() {
     setCurrentCell(null);
     setWrongInputPosition(null);
     setHistory([]);
+    timerRef.current?.handleTimeReset();
   };
 
   useEffect(() => {
@@ -81,8 +96,13 @@ export default function App() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      {/* <h1 className="text-3xl font-bold text-gray-800 mb-6">Sudoku</h1> */}
+      <div className="flex justify-center items-center w-full space-x-8">
+        <div className={clsx({ 'text-red-400': isWrongLimited })}>
+          <span className="text-red-400">{wrongTimes}</span> / 3 错误次数
+        </div>
 
+        <Timer ref={timerRef} />
+      </div>
       <div className="grid grid-cols-9 w-fit bg-white p-2 rounded-lg shadow-lg">
         {grid.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
@@ -105,10 +125,10 @@ export default function App() {
           className={clsx(
             'px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition',
             {
-              'opacity-50 cursor-not-allowed': !canUndo,
+              'opacity-50 cursor-not-allowed': !canUndo || isWrongLimited,
             }
           )}
-          disabled={!canUndo}
+          disabled={!canUndo || isWrongLimited}
         >
           撤回
         </button>
