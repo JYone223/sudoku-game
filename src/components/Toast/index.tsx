@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import type { ToastType } from './type';
-import { toastGlobal } from './utils';
+import { toastGlobal } from './util';
 
 const ToastRenderer = lazy(() => import('./ToastRenderer'));
 
